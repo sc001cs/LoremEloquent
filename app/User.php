@@ -23,4 +23,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    public function addressonetoone() {
+        
+        return $this->hasOne('App\AddressOneToOne');
+    }
+
+    public function postsonetomany() {
+
+        return $this->hasMany('App\PostOneToMany');
+    }
+    
 }
