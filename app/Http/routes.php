@@ -14,6 +14,7 @@
 use App\User;
 use App\AddressOneToOne;
 use App\PostOneToMany;
+use App\Role;
 
 Route::get('/', function () {
     return view('welcome');
@@ -96,6 +97,87 @@ Route::get('/deleteonetomany', function () {
     $user = User::find(1);
 
     $user->postsonetomany()->whereId(1)->delete();
+});
+
+//*|+/*\*|+/*\*|+/*\*|+/*\/\*|+/*\*|+/*\/
+
+
+/*|+/*\*|+/*\*|+/*\*|+/*\/
+ | Eloquent Many to Many
+ **|+/*\*|+/*\*|+/*\*|+/*/
+
+Route::get('createmanytomany', function () {
+
+    $user = User::findOrFail(1);
+
+    $role = new Role(['name'=>'Simple user']);
+
+    $user->rolesmanytomany()->save($role);
+
+});
+
+Route::get('createmanytomany2', function () {
+
+    $role = Role::findOrFail(1);
+
+    $user = new User(['name'=>'Simple user', 'password'=>'dsa123','email'=>'dsa@dsa.com']);
+
+    $role->usersmanytomany()->save($user);
+
+});
+
+Route::get('/readmanytomany', function () {
+
+    $user = User::findOrFail(3);
+
+    dd($user->rolesmanytomany);
+
+    foreach ($user->rolesmanytomany as $role) {
+        dd($role);
+    }
+});
+
+Route::get('updatemanytomany', function () {
+
+    $user = User::findOrFail(3);
+
+    if($user->has('rolesmanytomany')) {
+
+        foreach ($user->rolesmanytomany as $role) {
+            if($role->name == 'administrator') {
+
+                $role->name = 'Admin';
+
+                $role->save();
+            }
+        }
+    }
+
+});
+
+
+Route::get('deletemanytomany', function () {
+
+    $user = User::findOrFail(1);
+
+    $user->rolesmanytomany()->first()->delete();
+
+});
+
+Route::get('/attachmanytomany', function () {
+
+    $user = User::findOrFail(1);
+
+    $user->rolesmanytomany()->attach(3);
+
+});
+
+Route::get('/detachmanytomany', function () {
+
+    $user = User::findOrFail(1);
+
+    $user->rolesmanytomany()->detach(3);
+
 });
 
 //*|+/*\*|+/*\*|+/*\*|+/*\/\*|+/*\*|+/*\/
